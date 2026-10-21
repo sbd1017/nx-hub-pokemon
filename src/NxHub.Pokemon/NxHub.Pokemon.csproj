@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <Description>NX Hub Pokémon trade bot: SysBot.NET's trade engine with a web interface.</Description>
+    <RootNamespace>NxHub.Pokemon</RootNamespace>
+    <AssemblyName>nxhub-pokemon</AssemblyName>
+    <!-- Keep memory modest on a Raspberry Pi: workstation GC, no concurrent background GC thread. -->
+    <ServerGarbageCollection>false</ServerGarbageCollection>
+    <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
+    <TieredPGO>true</TieredPGO>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\external\SysBot.NET\SysBot.Pokemon\SysBot.Pokemon.csproj" />
+    <!-- Optional: the original Discord bot keeps working when config.json has a Discord token. -->
+    <ProjectReference Include="..\..\external\SysBot.NET\SysBot.Pokemon.Discord\SysBot.Pokemon.Discord.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="NxHub.Pokemon.Tests" />
+  </ItemGroup>
+
+</Project>

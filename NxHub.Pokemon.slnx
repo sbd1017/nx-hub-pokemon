@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/NxHub.Pokemon/NxHub.Pokemon.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/NxHub.Pokemon.Tests/NxHub.Pokemon.Tests.csproj" />
+  </Folder>
+  <Folder Name="/external/">
+    <Project Path="external/SysBot.NET/SysBot.Base/SysBot.Base.csproj" />
+    <Project Path="external/SysBot.NET/SysBot.Pokemon/SysBot.Pokemon.csproj" />
+    <Project Path="external/SysBot.NET/SysBot.Pokemon.Discord/SysBot.Pokemon.Discord.csproj" />
+  </Folder>
+</Solution>

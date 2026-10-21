@@ -1,0 +1,3 @@
+[submodule "external/SysBot.NET"]
+	path = external/SysBot.NET
+	url = https://github.com/kwsch/SysBot.NET.git

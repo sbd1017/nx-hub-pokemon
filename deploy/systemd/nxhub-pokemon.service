@@ -1,0 +1,52 @@
+[Unit]
+Description=NX Hub trade bot (SysBot.NET with a web interface)
+Documentation=https://github.com/sbd1017/nx-hub-pokemon
+Wants=network-online.target
+After=network-online.target nxhub.service
+
+[Service]
+Type=exec
+ExecStart=/opt/nxhub-pokemon/nxhub-pokemon
+WorkingDirectory=/var/lib/nxhub-pokemon
+# "always": changing the game or Switch in the web page restarts the service on purpose.
+Restart=always
+RestartSec=2
+# Gives a running trade time to stop and the Switch time to be handed back to NX Hub.
+TimeoutStopSec=30
+
+# Data (config.json, admin token, request history, dumps) lives in /var/lib/nxhub-pokemon.
+DynamicUser=yes
+StateDirectory=nxhub-pokemon
+StateDirectoryMode=0700
+
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=DOTNET_CLI_TELEMETRY_OPTOUT=1
+Environment=DOTNET_gcServer=0
+# Listen address. Default is all interfaces on 8820 so phones on the LAN can reach it.
+# Environment=Urls=http://0.0.0.0:8820
+# Hand-over settings and the NX Hub token, written by install.sh (root-only file).
+EnvironmentFile=-/etc/nxhub-pokemon/nxhub.env
+
+# Hardening: the bot needs outbound TCP to the Switch (and Discord, if used) and an inbound HTTP port.
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX AF_NETLINK
+CapabilityBoundingSet=
+SystemCallArchitectures=native
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

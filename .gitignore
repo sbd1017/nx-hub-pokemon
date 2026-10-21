@@ -1,0 +1,20 @@
+# .NET
+bin/
+obj/
+*.user
+.vs/
+TestResults/
+artifacts/
+publish/
+
+# Runtime data (never commit configs, tokens, dumps or trade logs)
+data/
+admin-token
+config.json
+
+# Local overrides
+appsettings.Local.json
+
+# OS / editors
+.DS_Store
+.idea/

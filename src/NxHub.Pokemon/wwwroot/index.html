@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#111317">
+  <title>Trade bot · NX Hub</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="app.css?v=2">
+  <script src="app.js?v=2" defer></script>
+</head>
+<body>
+  <header class="top">
+    <div>
+      <p class="overline">NX Hub</p>
+      <h1>Trade bot</h1>
+    </div>
+    <span id="status-chip" class="chip">Loading…</span>
+  </header>
+
+  <main>
+    <div id="banner" class="banner" hidden></div>
+
+    <section id="signin" class="card" hidden>
+      <h2>Sign in</h2>
+      <p class="muted">Paste the admin token from <code>admin-token</code> in the trade bot's data directory.</p>
+      <form id="signin-form" class="stack">
+        <label>Admin token <input id="token" type="password" autocomplete="off" required></label>
+        <button class="primary" type="submit">Sign in</button>
+      </form>
+    </section>
+
+    <section id="bot" class="card" hidden>
+      <div class="card-head">
+        <h2>Bot</h2>
+        <div class="actions">
+          <button id="start" class="primary" type="button">Start</button>
+          <button id="stop" type="button">Stop</button>
+        </div>
+      </div>
+      <dl class="facts">
+        <div><dt>Game</dt><dd id="fact-game">–</dd></div>
+        <div><dt>Switch</dt><dd id="fact-switch">–</dd></div>
+        <div><dt>In-game name</dt><dd id="fact-ign">–</dd></div>
+        <div><dt>NX Hub</dt><dd id="fact-handover">–</dd></div>
+        <div><dt>Queue</dt><dd id="fact-queue">–</dd></div>
+        <div><dt>Discord</dt><dd id="fact-discord">–</dd></div>
+      </dl>
+      <p class="note">Starting the bot presses buttons on your Switch and takes it online for link trades.
+        Have the game open and saved first. Online play with custom firmware can get a console banned.</p>
+    </section>
+
+    <section id="request" class="card" hidden>
+      <div class="tabs" role="tablist">
+        <button id="tab-trade" role="tab" aria-selected="true" type="button">Get a Pokémon</button>
+        <button id="tab-info" role="tab" aria-selected="false" type="button">Trainer info</button>
+      </div>
+
+      <form id="trade-form" class="stack">
+        <label>Showdown set
+          <textarea id="set" rows="7" spellcheck="false" placeholder="Pikachu @ Light Ball&#10;Ability: Static&#10;Shiny: Yes&#10;Tera Type: Electric&#10;- Thunderbolt"></textarea>
+        </label>
+        <label>or a Pokémon file <input id="file" type="file"></label>
+        <label>Link code <span class="muted">(optional)</span>
+          <input id="trade-code" inputmode="numeric" autocomplete="off" placeholder="Random" maxlength="9">
+        </label>
+        <button class="primary" type="submit">Request trade</button>
+      </form>
+
+      <form id="info-form" class="stack" hidden>
+        <p class="muted">The bot opens a link trade with you. Show any Pokémon you caught yourself and it reads
+          your trainer name, TID, SID, game and language from it, then backs out. Nothing is traded.</p>
+        <label>Link code <span class="muted">(optional)</span>
+          <input id="info-code" inputmode="numeric" autocomplete="off" placeholder="Random" maxlength="9">
+        </label>
+        <button class="primary" type="submit">Read my trainer info</button>
+      </form>
+      <p id="request-error" class="error" role="alert" hidden></p>
+    </section>
+
+    <section id="requests" class="card" hidden>
+      <div class="card-head">
+        <h2>Requests</h2>
+        <label id="all-label" class="toggle" hidden><input id="show-all" type="checkbox"> Everyone's</label>
+      </div>
+      <p id="requests-empty" class="muted">Nothing yet.</p>
+      <ol id="request-list" class="requests"></ol>
+    </section>
+
+    <section id="setup" class="card" hidden>
+      <details id="setup-details">
+        <summary><h2>Setup</h2></summary>
+        <form id="setup-form" class="stack">
+          <label>Game <select id="mode"></select></label>
+          <div class="row">
+            <label class="grow">Switch IP address <input id="host" autocomplete="off" placeholder="192.168.1.50" required></label>
+            <label class="narrow">Port <input id="port" inputmode="numeric" value="6000" required></label>
+          </div>
+          <button class="primary" type="submit">Save and restart</button>
+        </form>
+        <div class="stack import">
+          <p class="muted">Already ran SysBot.NET (for example with Discord)? Import its <code>config.json</code>
+            to keep every setting, including the Discord bot.</p>
+          <label>config.json <input id="import" type="file" accept=".json,application/json"></label>
+        </div>
+        <p id="setup-error" class="error" role="alert" hidden></p>
+      </details>
+    </section>
+
+    <section id="owner-extras" class="card" hidden>
+      <details id="queue-details">
+        <summary><h2>Queue</h2></summary>
+        <p id="queue-empty" class="muted">Empty.</p>
+        <ol id="queue-list" class="queue"></ol>
+      </details>
+      <details id="log-details">
+        <summary><h2>Bot log</h2></summary>
+        <pre id="log" class="log"></pre>
+      </details>
+    </section>
+  </main>
+  <footer class="foot">
+    <a id="source" href="https://github.com/sbd1017/nx-hub-pokemon" rel="noopener">Source code</a>
+    · AGPL-3.0 · built on SysBot.NET and PKHeX
+  </footer>
+</body>
+</html>
