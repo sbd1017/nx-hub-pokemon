@@ -81,6 +81,9 @@ public sealed class HandOverOptions
     /// <summary>File holding the NX Hub admin token, for example <c>/var/lib/nxhub/admin-token</c>.</summary>
     public string? TokenFile { get; set; }
 
+    /// <summary>NX Hub's web page as a browser opens it, for a link back from the trade page, for example <c>/nxhub/</c>.</summary>
+    public string? PageUrl { get; set; }
+
     /// <summary>NX Hub's id for the Switch the trade bot uses (<c>sw_…</c>).</summary>
     public string? SwitchId { get; set; }
 

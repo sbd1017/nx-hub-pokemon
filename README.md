@@ -60,6 +60,9 @@ steps aside while the bot runs (otherwise both would press buttons at once):
 sudo ./install.sh --nxhub http://127.0.0.1:8810 --switch-id sw_abc123 --nxhub-token-file /var/lib/nxhub/admin-token
 ```
 
+To link the two pages, set `NxHub:Ui:Links` in NX Hub (name it `Trade bot` so its "Handed over"
+notice links here too) and `NxHubPokemon:NxHub:PageUrl` here.
+
 Pressing **Start** then asks NX Hub to hand the Switch over (NX Hub releases its inputs, disconnects
 and shows "Handed over"). **Stop** hands it back. If the bot crashes, NX Hub takes the Switch back
 after a minute on its own.
@@ -84,7 +87,7 @@ dotnet test
 | `NxHubPokemon:Auth:Mode` | `Token` | `Disabled` only on a trusted network |
 | `NxHubPokemon:Auth:TrustedProxyUserHeader` | | Header a reverse proxy on the same machine sets to the signed-in user |
 | `NxHubPokemon:Auth:Owners` | everyone | Proxy users who may start/stop the bot and change setup |
-| `NxHubPokemon:NxHub:*` | | Hand-over: `BaseUrl`, `SwitchId`, `Token` or `TokenFile`, `LeaseSeconds` |
+| `NxHubPokemon:NxHub:*` | | Hand-over: `BaseUrl`, `SwitchId`, `Token` or `TokenFile`, `LeaseSeconds`; `PageUrl` adds a link back to NX Hub |
 | `NxHubPokemon:SourceUrl` | this repository | Linked from the page, as AGPL-3.0 requires |
 
 Everything about trading itself (codes, timings, legality rules, Discord) is SysBot.NET's

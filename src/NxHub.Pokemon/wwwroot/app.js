@@ -112,6 +112,9 @@
     }
     renderStatus();
     if (status.sourceUrl) $("source").href = status.sourceUrl;
+    if (status.hubUrl) $("hub-link").href = status.hubUrl;
+    show("hub-link", Boolean(status.hubUrl));
+    show("hub-text", !status.hubUrl);
     const all = me.isOwner && $("show-all").checked;
     renderRequests(await call("GET", "requests" + (all ? "?all=true" : "")));
     if (me.isOwner) {

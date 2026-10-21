@@ -143,3 +143,15 @@ public sealed class ApiTests : IDisposable
     private static async Task<JsonElement> Problem(HttpResponseMessage response) =>
         await response.Content.ReadFromJsonAsync<JsonElement>();
 }
+
+public sealed class LinkTests
+{
+    [Theory]
+    [InlineData("/nxhub/", "/nxhub/")]
+    [InlineData("https://hub.example/", "https://hub.example/")]
+    [InlineData("javascript:alert(1)", null)]
+    [InlineData("//evil.example/", null)]
+    [InlineData("", null)]
+    public void Only_site_paths_and_web_urls_become_links(string url, string? expected) =>
+        Assert.Equal(expected, NxHub.Pokemon.Api.Endpoints.SafeLink(url));
+}

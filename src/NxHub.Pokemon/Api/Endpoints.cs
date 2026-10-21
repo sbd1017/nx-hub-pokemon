@@ -50,6 +50,7 @@ public static class Endpoints
                 discord = setup.Discord,
                 isOwner = context.User().IsOwner,
                 sourceUrl = options.Value.SourceUrl,
+                hubUrl = SafeLink(options.Value.NxHub.PageUrl),
             });
         });
 
@@ -227,6 +228,23 @@ public static class Endpoints
             Forbidden(context) ?? Results.Ok(log.Recent(Math.Clamp(count ?? 100, 1, 300))));
 
         api.MapFallback(() => Problem(StatusCodes.Status404NotFound, "not_found", "Not found", "No such API endpoint."));
+    }
+
+    /// <summary>Only site paths and http(s) URLs are handed to the page as links.</summary>
+    internal static string? SafeLink(string? url)
+    {
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            return null;
+        }
+
+        url = url.Trim();
+        if (url.StartsWith('/') && !url.StartsWith("//", StringComparison.Ordinal))
+        {
+            return url;
+        }
+
+        return Uri.TryCreate(url, UriKind.Absolute, out var uri) && (uri.Scheme == Uri.UriSchemeHttps || uri.Scheme == Uri.UriSchemeHttp) ? url : null;
     }
 
     internal static WebUser User(this HttpContext context) => (WebUser)context.Items[typeof(WebUser)]!;
