@@ -259,9 +259,24 @@ internal sealed class TradeBot<T> : ITradeBot
         }
 
         detail.IsReady = true;
-        var position = Hub.Queues.Info.CheckPosition(user.Id, routine);
-        _registry.AddMessage(request.Id, $"Added to the queue at position {position.Position}. Your link code is {RequestRegistry.FormatCode(tradeCode)}.");
+        _registry.AddMessage(request.Id, $"Added to the queue at position {PositionOf(entry)}. Your link code is {RequestRegistry.FormatCode(tradeCode)}.");
         return RequestOutcome.Ok(_registry.Get(request.Id)!);
+    }
+
+    // The entry's place in the whole queue, counted the same way as Queue. SysBot.NET's
+    // CheckPosition finds a user's first entry only and counts each routine type separately.
+    private int PositionOf(TradeEntry<T> entry)
+    {
+        var entries = Hub.Queues.Info.GetIsUserQueued(_ => true);
+        for (var i = 0; i < entries.Count; i++)
+        {
+            if (ReferenceEquals(entries[i], entry))
+            {
+                return i + 1;
+            }
+        }
+
+        return entries.Count;
     }
 }
 

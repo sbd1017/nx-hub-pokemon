@@ -53,6 +53,22 @@ public sealed class TradeBotTests
     }
 
     [Fact]
+    public void Each_new_request_is_told_its_place_in_the_queue()
+    {
+        var (bot, registry) = Create();
+
+        var first = bot.RequestTrade(WebUser.Owner, "Garchomp\nLevel: 50\n- Earthquake", null).Request!;
+        var second = bot.RequestTrade(WebUser.Owner, "Pikachu\nLevel: 50\n- Thunderbolt", null).Request!;
+        var third = bot.RequestTrainerInfo(WebUser.Owner, null).Request!;
+
+        Assert.Equal([first.Id, second.Id, third.Id], bot.Queue.Select(q => q.RequestId));
+        Assert.Equal([1, 2, 3], bot.Queue.Select(q => q.Position));
+        Assert.StartsWith("Added to the queue at position 1.", registry.Get(first.Id)!.Messages[0].Text, StringComparison.Ordinal);
+        Assert.StartsWith("Added to the queue at position 2.", registry.Get(second.Id)!.Messages[0].Text, StringComparison.Ordinal);
+        Assert.StartsWith("Added to the queue at position 3.", registry.Get(third.Id)!.Messages[0].Text, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void A_set_that_cannot_be_read_is_refused()
     {
         var (bot, _) = Create();
