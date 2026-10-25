@@ -11,6 +11,19 @@ There is also a **trainer info** request: the bot opens a link trade, reads the 
 from a Pokémon you show it (name, TID, SID, gender, game, language), and backs out without trading
 anything. Useful for making Pokémon with your own trainer details.
 
+<p align="center">
+  <img src="docs/screenshots/trade-page.png" alt="The trade bot page: bot status, game, Switch address and the Get a Pokémon form with a Showdown set" width="780">
+</p>
+
+<table>
+<tr>
+<td width="62%"><img src="docs/screenshots/trainer-info.png" alt="The Trainer info tab"><br><b>Trainer info</b>: the bot reads your name, TID and SID from a Pokémon you show it, then backs out</td>
+<td width="38%"><img src="docs/screenshots/phone.png" alt="The page on a phone"><br><b>On a phone</b></td>
+</tr>
+</table>
+
+<sub>From a fresh install with the bot stopped and a few sample requests.</sub>
+
 Under the hood this is [SysBot.NET](https://github.com/kwsch/SysBot.NET), the trade bot many
 Discord servers run, with a web front end added. Same trade routines, same legality checks
 (PKHeX + Auto-Legality Mod), same `config.json`. If you already run SysBot.NET with Discord, import
