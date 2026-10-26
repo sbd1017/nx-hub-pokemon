@@ -99,6 +99,7 @@ dotnet test
 | `NxHubPokemon:PathBase` | | Sub-path behind a reverse proxy, for example `/nxhub/trade` |
 | `NxHubPokemon:Auth:Mode` | `Token` | `Disabled` only on a trusted network |
 | `NxHubPokemon:Auth:TrustedProxyUserHeader` | | Header a reverse proxy on the same machine sets to the signed-in user |
+| `NxHubPokemon:Auth:TrustedProxyKeyFile` | | File with the secret (32+ chars) that proxy sends in `X-Site-Proxy-Key` (`...:TrustedProxyKeyHeader`) on every request; a systemd credential `site-proxy-key` is used when present. Required with `TrustedProxyUserHeader`, which is otherwise refused at start-up: loopback alone proves nothing |
 | `NxHubPokemon:Auth:Owners` | everyone | Proxy users who may start/stop the bot and change setup |
 | `NxHubPokemon:NxHub:*` | | Hand-over: `BaseUrl`, `SwitchId`, `Token` or `TokenFile`, `LeaseSeconds`; `PageUrl` adds a link back to NX Hub |
 | `NxHubPokemon:SourceUrl` | this repository | Linked from the page, as AGPL-3.0 requires |

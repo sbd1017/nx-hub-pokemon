@@ -27,6 +27,8 @@ public sealed class WebAuth
 
     private readonly byte[]? _tokenHash;
     private readonly string? _proxyHeader;
+    private readonly string _proxyKeyHeader;
+    private readonly byte[]? _proxyKeyHash;
     private readonly HashSet<string> _owners;
 
     public WebAuth(IOptions<PokemonOptions> options, DataDirectory data, ILogger<WebAuth> logger)
@@ -34,6 +36,15 @@ public sealed class WebAuth
         var auth = options.Value.Auth;
         Enabled = auth.Mode == AuthMode.Token;
         _proxyHeader = string.IsNullOrWhiteSpace(auth.TrustedProxyUserHeader) ? null : auth.TrustedProxyUserHeader.Trim();
+        _proxyKeyHeader = string.IsNullOrWhiteSpace(auth.TrustedProxyKeyHeader) ? "X-Site-Proxy-Key" : auth.TrustedProxyKeyHeader.Trim();
+        if (_proxyHeader is not null)
+        {
+            var key = LoadProxyKey(auth.TrustedProxyKeyFile)
+                ?? throw new InvalidOperationException(
+                    "NxHubPokemon:Auth:TrustedProxyUserHeader needs the proxy's secret: NxHubPokemon:Auth:TrustedProxyKeyFile, or a systemd credential named site-proxy-key (32+ characters).");
+            _proxyKeyHash = Hash(key);
+        }
+
         _owners = new HashSet<string>(auth.Owners.Where(o => !string.IsNullOrWhiteSpace(o)).Select(o => o.Trim()), StringComparer.OrdinalIgnoreCase);
         TokenFilePath = Path.Combine(data.Path, TokenFileName);
         if (!Enabled)
@@ -74,6 +85,14 @@ public sealed class WebAuth
             return null;
         }
 
+        // Loopback is not proof the proxy sent it: the request must also carry the proxy's secret.
+        var keys = context.Request.Headers[_proxyKeyHeader];
+        if (keys.Count != 1 || string.IsNullOrEmpty(keys[0]) || keys[0]!.Length > 512
+            || !CryptographicOperations.FixedTimeEquals(Hash(keys[0]!), _proxyKeyHash))
+        {
+            return null;
+        }
+
         var name = context.Request.Headers[_proxyHeader].ToString().Trim();
         if (name.Length is 0 or > 256)
         {
@@ -105,6 +124,27 @@ public sealed class WebAuth
         presented.Length is > 0 and <= 512 && CryptographicOperations.FixedTimeEquals(Hash(presented), _tokenHash);
 
     private static byte[] Hash(string value) => SHA256.HashData(Encoding.UTF8.GetBytes(value));
+
+    /// <summary>The systemd credential <c>site-proxy-key</c>, else the configured file; null if neither holds 32+ characters.</summary>
+    private static string? LoadProxyKey(string? keyFile)
+    {
+        var credentials = Environment.GetEnvironmentVariable("CREDENTIALS_DIRECTORY");
+        foreach (var path in new[] { string.IsNullOrEmpty(credentials) ? null : Path.Combine(credentials, "site-proxy-key"), keyFile })
+        {
+            if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
+            {
+                continue;
+            }
+
+            var key = File.ReadAllText(path).Trim();
+            if (key.Length >= 32)
+            {
+                return key;
+            }
+        }
+
+        return null;
+    }
 
     private static string LoadOrCreate(string path, ILogger logger)
     {

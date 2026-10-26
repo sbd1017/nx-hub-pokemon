@@ -55,9 +55,21 @@ public sealed class AuthOptions
 
     /// <summary>
     /// Header a reverse proxy on this machine sets to the signed-in user's name (for example
-    /// <c>X-Site-User</c>). Trusted from loopback only. Empty disables proxy sign-in.
+    /// <c>X-Site-User</c>). Trusted from loopback only, together with the proxy key
+    /// (<see cref="TrustedProxyKeyFile"/>): any process on the machine can connect over loopback.
+    /// Empty disables proxy sign-in.
     /// </summary>
     public string? TrustedProxyUserHeader { get; set; }
+
+    /// <summary>Header in which the reverse proxy sends its secret with every request.</summary>
+    public string TrustedProxyKeyHeader { get; set; } = "X-Site-Proxy-Key";
+
+    /// <summary>
+    /// File holding that secret (32+ characters); a systemd credential named <c>site-proxy-key</c>
+    /// (<c>LoadCredential=</c>) is used instead when present. Required with
+    /// <see cref="TrustedProxyUserHeader"/>: without it the server refuses to start.
+    /// </summary>
+    public string? TrustedProxyKeyFile { get; set; }
 
     /// <summary>
     /// Proxy users who may start and stop the bot, change setup and see everyone's requests.
